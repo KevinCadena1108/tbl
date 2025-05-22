@@ -1,7 +1,9 @@
 {
-module Parser where 
+
+module Parser where
 
 import Lexer
+
 }
 
 %name parser 
@@ -14,33 +16,52 @@ import Lexer
     false           { TokenFalse }
     '+'             { TokenAdd }
     '-'             { TokenSub }
-    '*'             { TokenMul }
+    '*'             { TokenMult }
     '/'             { TokenDiv }
     "&&"            { TokenAnd }
+    "^^"            { TokenXor }
+    '|'             { TokenOr }
+    '%'             { TokenMod }
+    '!'             { TokenNot }
+    "=="            { TokenEqual }
+    '>'             { TokenGThan }
+    '<'             { TokenLThan }
     if              { TokenIf }
     then            { TokenThen }
     else            { TokenElse }
 
-%nonassoc if then else 
+
+%nonassoc if then else
 %left '+' '-'
-%left '*' '/'
-%left "&&"
+%left '*' '/' '%'
+%left '!' "==" "^^" "&&" '|'
 
-%% 
+%%
 
-Exp     : num                       { Num $1 }
-        | true                      { BTrue }
-        | false                     { BFalse }
-        | Exp '+' Exp               { Add $1 $3 }
-        | Exp '-' Exp               { Sub $1 $3 }
-        | Exp '*' Exp               { Mul $1 $3 }
-        | Exp '/' Exp               { Div $1 $3 }
-        | Exp "&&" Exp              { And $1 $3 }
-        | if Exp then Exp else Exp  { If $2 $4 $6 }
+Exp : num           { Num $1 }
+    | true          { BTrue }
+    | false         { BFalse }
+    | Exp '+' Exp   { Add $1 $3 }
+    | Exp '-' Exp   { Sub $1 $3 }
+    | Exp '*' Exp   { Mult $1 $3 }
+    | Exp '/' Exp   { Div $1 $3 }
+    | Exp '%' Exp   { Mod $1 $3 }
+    | Exp '<' Exp   { GThan $1 $3 }
+    | Exp '>' Exp   { LThan $1 $3 }
+    | Exp '!' Exp   { Not $1 }
+    | Exp '|' Exp   { Or $1 $3 }
+    | Exp "^^" Exp  { Xor $1 $3 }
+    | Exp "==" Exp  { Equal $1 $3}
+    | Exp "&&" Exp  { And $1 $3 }
+    | if Exp then Exp else Exp  {If $2 $4 $6}
 
-{ 
+
+
+
+{
 
 parseError :: [Token] -> a 
-parseError _ = error "Erro sintático!"
+parseError _ = error "Erro sintático"
 
 }
+

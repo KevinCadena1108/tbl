@@ -41,6 +41,12 @@ import Lexer
 
     '='             { TokenEqDef }
 
+    -- Trabalho
+    '{'             { TokenEChave }
+    '}'             { TokenDChave }
+    ','             { TokenVirgula }
+    '.'             { TokenPonto }
+
 %nonassoc if then else 
 %nonassoc '\\' 
 %left '+'
@@ -76,9 +82,24 @@ Exp     : num                           { Num $1 }
 
         | let var '=' Exp in Exp        { Let $2 $4 $6 }
 
+        -- Trabalho
+        | '{' ExpList '}'              { Tuple $2 }
+        | Exp '.' num                   { Proj $1 $3 }
+
 Type    : Boolean                       { TBool }
         | Number                        { TNum }
         | '(' Type "->" Type ')'        { TFun $2 $4 }
+
+        -- Trabalho
+        | '{' TypeList '}'              { TTuple $2 }
+
+
+        -- Trabalho
+ExpList : Exp                          { [$1] }
+        | Exp ',' ExpList              { $1 : $3 }
+
+TypeList : Type                        { [$1] }
+         | Type ',' TypeList           { $1 : $3 }
 
 { 
 

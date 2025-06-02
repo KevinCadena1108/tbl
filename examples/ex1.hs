@@ -1,1 +1,1 @@
-let c = (let b = (let a = 5 in a + 2) in b * 2) in c - 4
+let t = {if !true then 1 else 2, if false then 3 else 4, 10, false} in t.4

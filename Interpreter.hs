@@ -7,7 +7,11 @@ isValue BTrue       = True
 isValue BFalse      = True  
 isValue (Num _)     = True 
 isValue (Lam _ _ _) = True
+
+-- Trabalho
+isValue (Tuple es) = all isValue es
 isValue _           = False 
+
 
 subst :: String -> Expr -> Expr -> Expr
 subst v e (Add e1 e2) = Add (subst v e e1) (subst v e e2)
@@ -27,6 +31,10 @@ subst v e (Var x) = if v == x then e else Var x
 subst v e (Lam x t b) = Lam x t (subst v e b)
 subst v e (App e1 e2) = App (subst v e e1) (subst v e e2)
 subst v e (Paren e1) = Paren (subst v e e1)
+
+-- Trabalho
+subst v e (Tuple es) = Tuple (map (subst v e) es)
+subst v e (Proj e1 i) = Proj (subst v e e1) i
 
 
 step :: Expr -> Expr 
@@ -76,6 +84,16 @@ step (App e1@(Lam x t b) e2) | isValue e2 = subst x e2 b
                              | otherwise  = App e1 (step e2)
 step (App e1 e2) = App (step e1) e2 
 step (Paren e) = e 
+
+-- Trabalho
+step (Tuple es) =
+  case break (not . isValue) es of
+    (before, e:after) -> Tuple (before ++ [step e] ++ after)
+    (_, [])           -> Tuple es
+
+step (Proj (Tuple es) i)
+  | all isValue es && i > 0 && i <= length es = es !! (i - 1)
+step (Proj e i) = Proj (step e) i
 
 eval :: Expr -> Expr 
 eval e | isValue e = e 

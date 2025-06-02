@@ -69,6 +69,18 @@ typeof ctx (App e1 e2) =
     _ -> Nothing 
 typeof ctx (Paren e) = typeof ctx e 
 
+-- Trabalho
+typeof ctx (Tuple es) =
+  case mapM (typeof ctx) es of
+    Just ts -> Just (TTuple ts)
+    _       -> Nothing
+
+
+typeof ctx (Proj e i) =
+  case typeof ctx e of
+    Just (TTuple ts) | i > 0 && i <= length ts -> Just (ts !! (i - 1))
+    _ -> Nothing
+
                              
 
 typecheck :: Expr -> Expr  

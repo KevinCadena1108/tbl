@@ -24,11 +24,18 @@ data Expr = BTrue
           | Not Expr 
           
           | Let String Expr Expr
+
+          -- Trabalho
+          | Tuple [Expr]           
+          | Proj Expr Int          -- Para projeção, se quiser acessar elementos: t.i
           deriving Show 
 
 data Ty = TBool 
         | TNum 
         | TFun Ty Ty 
+
+        -- Trabalho
+        | TTuple [Ty]
         deriving (Show, Eq)
 
 data Token = TokenTrue 
@@ -62,6 +69,12 @@ data Token = TokenTrue
            | TokenIn
 
            | TokenEqDef 
+
+           -- Trabalho
+           | TokenVirgula
+           | TokenEChave
+           | TokenDChave
+           | TokenPonto
            deriving Show 
 
 lexer :: String -> [Token]
@@ -85,6 +98,12 @@ lexer ('=':'=':cs) = TokenEq : lexer cs
 lexer ('!':cs) = TokenNot : lexer cs
 
 lexer ('=':cs) = TokenEqDef : lexer cs
+
+-- Trabalho
+lexer (',':cs) = TokenVirgula : lexer cs
+lexer ('{':cs) = TokenEChave : lexer cs
+lexer ('}':cs) = TokenDChave : lexer cs
+lexer ('.':cs) = TokenPonto : lexer cs
 
 lexer (c:cs) | isSpace c = lexer cs 
              | isDigit c = lexNum (c:cs) 

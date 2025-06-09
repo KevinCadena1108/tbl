@@ -35,7 +35,7 @@ data Ty = TBool
         | TFun Ty Ty 
 
         -- Trabalho
-        | TTuple [Ty]
+        | TTuple [Ty]           -- [TNum, TBool, TNum]
         deriving (Show, Eq)
 
 data Token = TokenTrue 

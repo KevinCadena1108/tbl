@@ -1,1 +1,1 @@
-let a = {if !true then 1 else 2, if false then 3 else 4, 10, false, 9} in a.5
+let t = {1, 2, 3} in t.1 * t.3

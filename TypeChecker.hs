@@ -12,7 +12,6 @@ typeof ctx (Add e1 e2) = case (typeof ctx e1, typeof ctx e2) of
                        (Just TNum, Just TNum) -> Just TNum 
                        _                      -> Nothing
 
-
 typeof ctx (Sub e1 e2) = case (typeof ctx e1, typeof ctx e2) of
                        (Just TNum, Just TNum) -> Just TNum
                        _                      -> Nothing
@@ -29,14 +28,12 @@ typeof ctx (Lt e1 e2) = case (typeof ctx e1, typeof ctx e2) of
                        _                      -> Nothing
 
 typeof ctx (Eq e1 e2) = case (typeof ctx e1, typeof ctx e2) of
-                       (Just TNum, Just TNum) -> Just TBool
-                       _                      -> Nothing
+    (Just t1, Just t2) | t1 == t2 -> Just TBool
+    _                             -> Nothing
 
 typeof ctx (Not e) = case typeof ctx e of
                        Just TBool -> Just TBool
                        _          -> Nothing
-
-
 
 typeof ctx (Let x e1 e2) =
   case typeof ctx e1 of
@@ -67,6 +64,7 @@ typeof ctx (App e1 e2) =
                                           Nothing 
                              _ -> Nothing 
     _ -> Nothing 
+
 typeof ctx (Paren e) = typeof ctx e 
 
 -- Trabalho
@@ -77,7 +75,6 @@ typeof ctx (Tuple es) =
 
 --  {1, true, 2}, retorna TTuple [TNum, TBool, TNum]
 
-
 typeof ctx (Proj e i) =
   case typeof ctx e of
     Just (TTuple ts) | i > 0 && i <= length ts -> Just (ts !! (i - 1))
@@ -85,11 +82,7 @@ typeof ctx (Proj e i) =
 
 -- {1, true, 2}.2, retorna TBool
 
-                             
-
 typecheck :: Expr -> Expr  
 typecheck e = case typeof [] e of 
                 Just _ -> e 
                 _      -> error "Erro de tipo!"
-
-

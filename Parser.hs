@@ -1013,7 +1013,7 @@ parser tks = happyRunIdentity happySomeParser where
 happySeq = happyDontSeq
 
 
-parseError :: [Token] -> a 
+parseError :: [Token] -> a
 parseError _ = error "Erro sintático!"
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $

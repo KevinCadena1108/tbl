@@ -9,8 +9,9 @@ isValue (Num _)     = True
 isValue (Lam _ _ _) = True
 
 -- Trabalho
-isValue (Tuple es) = all isValue es
-isValue _           = False 
+isValue (Tuple []) = True
+isValue (Tuple (e:es)) = isValue e && isValue (Tuple es)
+isValue _           = False       -- {1, (2 + 3), true} 
 
 
 subst :: String -> Expr -> Expr -> Expr
@@ -86,14 +87,25 @@ step (App e1 e2) = App (step e1) e2
 step (Paren e) = e 
 
 -- Trabalho
-step (Tuple es) =
-  case break (not . isValue) es of
-    (before, e:after) -> Tuple (before ++ [step e] ++ after)
-    (_, [])           -> Tuple es
+step (Tuple []) = Tuple []
+step (Tuple (e:es))
+  | not (isValue e) = Tuple (step e : es)
+  | otherwise =
+      let Tuple es' = step (Tuple es)
+      in Tuple (e : es')
 
-step (Proj (Tuple es) i)
-  | all isValue es && i > 0 && i <= length es = es !! (i - 1)
-step (Proj e i) = Proj (step e) i
+-- {1+2, true, 4}
+-- Primeiro avalia 1+2 para 3, depois a tupla vira {3, true, 4}
+
+
+step (Proj e i) =
+  case e of
+    Tuple es | all isValue es && i > 0 && i <= length es -> es !! (i - 1)
+    _ -> Proj (step e) i
+
+-- {10, 20, 30}.2
+-- 20
+
 
 eval :: Expr -> Expr 
 eval e | isValue e = e 

@@ -75,11 +75,15 @@ typeof ctx (Tuple es) =
     Just ts -> Just (TTuple ts)
     _       -> Nothing
 
+--  {1, true, 2}, retorna TTuple [TNum, TBool, TNum]
+
 
 typeof ctx (Proj e i) =
   case typeof ctx e of
     Just (TTuple ts) | i > 0 && i <= length ts -> Just (ts !! (i - 1))
     _ -> Nothing
+
+-- {1, true, 2}.2, retorna TBool
 
                              
 

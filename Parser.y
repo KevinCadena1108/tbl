@@ -83,8 +83,8 @@ Exp     : num                           { Num $1 }
         | let var '=' Exp in Exp        { Let $2 $4 $6 }
 
         -- Trabalho
-        | '{' ExpList '}'              { Tuple $2 }
-        | Exp '.' num                   { Proj $1 $3 }
+        | '{' ExpList '}'               { Tuple $2 }
+        | Exp '.' num                   { Proj $1 $3 }     
 
 Type    : Boolean                       { TBool }
         | Number                        { TNum }
@@ -96,14 +96,14 @@ Type    : Boolean                       { TBool }
 
         -- Trabalho
 ExpList : Exp                          { [$1] }
-        | Exp ',' ExpList              { $1 : $3 }
+        | Exp ',' ExpList              { $1 : $3 }   -- {1, 2, 3} transforma em Tuple [Num 1, Num 2, Num 3]
 
 TypeList : Type                        { [$1] }
-         | Type ',' TypeList           { $1 : $3 }
+         | Type ',' TypeList           { $1 : $3 }   -- {Number, Boolean} transforma em TTuple [TNum, TBool]
 
-{ 
+{
 
-parseError :: [Token] -> a 
+parseError :: [Token] -> a
 parseError _ = error "Erro sintático!"
 
 }

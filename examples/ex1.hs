@@ -1,1 +1,1 @@
-let t = {if !true then 1 else 2, if false then 3 else 4, 10, false} in t.4
+let a = {if !true then 1 else 2, if false then 3 else 4, 10, false, 9} in a.5

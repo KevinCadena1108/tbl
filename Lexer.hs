@@ -26,7 +26,7 @@ data Expr = BTrue
           | Let String Expr Expr
 
           -- Trabalho
-          | Tuple [Expr]           
+          | Tuple [Expr]           --  {1, true, 3}
           | Proj Expr Int          -- Para projeção, se quiser acessar elementos: t.i
           deriving Show 
 
@@ -60,8 +60,8 @@ data Token = TokenTrue
 
            | TokenOr
 
-           | TokenLT      -- '<'
-           | TokenEq      -- '=='    
+           | TokenLT             -- '<'
+           | TokenEq             -- '=='    
 
            | TokenNot    
 
@@ -72,9 +72,9 @@ data Token = TokenTrue
 
            -- Trabalho
            | TokenVirgula
-           | TokenEChave
-           | TokenDChave
-           | TokenPonto
+           | TokenEChave       -- {
+           | TokenDChave       -- }
+           | TokenPonto        -- t.5
            deriving Show 
 
 lexer :: String -> [Token]
